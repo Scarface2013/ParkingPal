@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #map {
+        width: 100%;
+        height: 400px;
+        background-color: grey;
+      }
+    </style>
+    <script>
+      var obj;
+      function initMap(){
+        var start = {lat: 39.268932, lng: -84.2582913};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 17,
+          center: start
+        });
+        $.getJSON('/getLots', function(lots){
+          $.each(lots, function(lod_id,lot){
+          console.log(lot);
+            lot.marker = new google.maps.Marker({
+              position: lot,
+              map: map
+            });
+            lot.infoWindow = new google.maps.InfoWindow({
+              content: "<H3><a href='/lot?lot_id="+lot.lot_id+"'>"+lot.name+"</A></H3>"
+            });
+            lot.marker.addListener('click', function(){
+              lot.infoWindow.open(map,lot.marker);
+            });
+          });
+          obj = lots;
+	});
+      }
+    </script>
+    <script defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqaR9dmobJd6D5M9JsyclBk3OjgiJRybE&callback=initMap">
+    </script>
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js" 
+      integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" 
+      crossorigin="anonymous">
+    </script>
+  </head>
+  <body>
+    <h3>Spot Finder</h3>
+    <div id="map"></div>
+  </body>
+</html>
