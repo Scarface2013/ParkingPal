@@ -11,7 +11,7 @@
   background: #2a2b39;
 }
 
-body, html {
+h1 {
   font-family: 'Raleway', sans-serif;
   background: url(world_map_dot_vector_147313.jpg);
   -webkit-background-size: cover;
@@ -24,3 +24,5 @@ body, html {
   overflow: hidden;
   z-index: 9;
 }
+
+
