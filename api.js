@@ -3,8 +3,8 @@
 // *********** OBJECT INITIALIZATION ************
 var fs = require('fs');
 var opts = {
-  key: fs.readFileSync("../key.pem"),
-  cert: fs.readFileSync("../cert.pem")
+  key: fs.readFileSync("/home/master/certs/key.pem"),
+  cert: fs.readFileSync("/home/master/certs/cert.pem")
 };
 var Canvas = require('canvas');
 var Image = Canvas.Image;
@@ -33,6 +33,8 @@ https.listen(8080, function(){
   console.log('Server started. Listening on port 8080');
 });
 
+
+// Redirect all traffic to https@8080
 redirHttp.listen(80);
 redirApp.get('*',function(req,res){
   res.redirect('https://www.tfletch.tech:8080'+req.url);
@@ -72,46 +74,43 @@ setInterval(function(){
 
 // Update lotmap
 setInterval(function(){
-
   Object.keys(spots).forEach(function(key){
     val = spots[key];
-    maskToSpot[("00000"+key).substring(-key.length)] = val.empty;
+    maskToSpot[("00000"+parseInt(key,16)).substring(-key.length)] = val.empty;
   });
-
-  var out = fs.createWriteStream(__dirname + '/lotmap/lot1.png');
-  fs.readFile(__dirname + '/lotmask/lot1.png', function(err, lotImg){
-    if (err) throw err;
-    img.src = lotImg;
-    mask.drawImage(img, 0, 0);
-    
-    var maskImageData = mask.getImageData(0,0,maskCanvas.width,maskCanvas.height);
-    var maskData = maskImageData.data;
-    for(var i = 0; i < maskData.length; i+=4){ 
-      var r = (maskData[i] < 15 ? "0" : "") + maskData[i].toString(16);
-      var g = (maskData[i+1] < 15 ? "0" : "") + maskData[i+1].toString(16);
-      var b = (maskData[i+2] < 15 ? "0" : "") + maskData[i+2].toString(16);
-      var hex = r+g+b;
-      if(hex === "000000" ||  hex === "ffffff"){
-        continue;
+  Object.keys(lots).forEach(function(lotId){
+    var out = fs.createWriteStream(__dirname + '/lotmap/lot'+lotId+'.png');
+    fs.readFile(__dirname + '/lotmask/lot'+lotId+'.png', function(err, lotImg){
+      if (err) throw err;
+      img.src = lotImg;
+      mask.drawImage(img, 0, 0);
+      
+      var maskImageData = mask.getImageData(0,0,maskCanvas.width,maskCanvas.height);
+      var maskData = maskImageData.data;
+      for(var i = 0; i < maskData.length; i+=4){ 
+        var r = (maskData[i] < 15 ? "0" : "") + maskData[i].toString(16);
+        var g = (maskData[i+1] < 15 ? "0" : "") + maskData[i+1].toString(16);
+        var b = (maskData[i+2] < 15 ? "0" : "") + maskData[i+2].toString(16);
+        var hex = r+g+b;
+        if(hex === "000000" ||  hex === "ffffff"){
+          continue;
+        }
+        if(maskToSpot[hex]){
+          maskData[i] = 0; 
+          maskData[i+1] = 255;
+          maskData[i+3] = 255;
+        }else{
+          maskData[i] = 255;
+          maskData[i+1] = 0; 
+          maskData[i+3] = 255;
+        }
       }
-      if(maskToSpot[hex]){
-        maskData[i] = 0; 
-        maskData[i+1] = 255;
-        maskData[i+3] = 255;
-      }else{
-        maskData[i] = 255;
-        maskData[i+1] = 0; 
-        maskData[i+3] = 255;
-      }
-    }
-    maskImageData.data = maskData;
-    mask.putImageData(maskImageData,0,0);
-    var stream = maskCanvas.pngStream();
-    stream.on('data',function(chunk){
-      out.write(chunk);
-    });
-    stream.on('end',function(){ 
-      out.close();
+      maskImageData.data = maskData;
+      mask.putImageData(maskImageData,0,0);
+      var stream = maskCanvas.pngStream();
+      stream.on('data',function(chunk){
+        out.write(chunk);
+      });
     });
   });
 },1000);
