@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Parking Pal</title>
     <style>
       #map {
-        width: 100%;
+        width: 50%;
         height: 400px;
         background-color: grey;
       }
@@ -27,6 +28,9 @@
               content: "<H3><a href='/lot?lot_id="+lot.lot_id+"'>"+lot.name+"</A></H3>"
             });
             lot.marker.addListener('click', function(){
+	      $.each(lots, function(lot_id, lot){
+	        lot.infoWindow.close();
+	      });
               lot.infoWindow.open(map,lot.marker);
             });
           });
@@ -43,7 +47,7 @@
     </script>
   </head>
   <body>
-    <h3>Spot Finder</h3>
+    <h3>Parking Pal</h3>
     <div id="map"></div>
   </body>
 </html>
