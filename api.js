@@ -74,7 +74,7 @@ setInterval(function(){
 setInterval(function(){
   Object.keys(spots).forEach(function(key){
     val = spots[key];
-    var hex = ("00000"+parseInt(key).toString(16)).substring(key.length-1,5+key.length);
+    var hex = ("00000"+parseInt(key).toString(16)).slice(-6);
     maskToSpot[hex] = val.empty;
   });
   Object.keys(lots).forEach(function(lotId){
@@ -115,7 +115,7 @@ setInterval(function(){
       });
     });
   });
-},1000);
+},2000);
 // ********** API CALLS ***************
 app.get('/getSpots', function(req,res){
   res.json(spots);
