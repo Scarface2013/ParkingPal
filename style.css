@@ -1,5 +1,6 @@
-@import url(http://fonts.googleapis.com/css?family=Old+Standard+TT:400,400italic,700);
-@import url(http://fonts.googleapis.com/css?family=Raleway:400,100,200,300,500,600,700,800,900);
+@import url(https://fonts.googleapis.com/css?family=Old+Standard+TT);
+@import url(https://fonts.googleapis.com/css?family=Raleway);
+
 ::selection {
   color: #fff;
   background: #2a2b39;
@@ -10,20 +11,21 @@
   background: #2a2b39;
 }
 
-h1 {
+h3 {
   font-family: 'Raleway', sans-serif;
   text-align: center;
   
 }
-map {
+#map {
   background: url(world_map_dot_vector_147313.jpg);
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
   margin: 100px;
+  margin-top: 20px;
   padding: 5px;
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 200px);
+  height: calc(100% - 140px);
   overflow: hidden;
   z-index: 9;
   
@@ -31,11 +33,7 @@ map {
 
 html, body{
   background: url(world_map_dot_vector_147313.jpg);
-  height: 100%
-  margin: 100px;
-  padding: 5px;
-  width: 100%;
   height: 100%;
-  
+  overflow: hidden;
 }
   

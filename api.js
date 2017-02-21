@@ -155,6 +155,10 @@ app.get('/',function(req,res){
   res.sendFile(__dirname+"/map.html");
 });
 
+app.get('/style.css',function(req,res){
+  res.sendFile(__dirname+"/style.css");
+});
+
 app.get('/lot', function(req,res){
   if(req.query.lot_id == undefined){
     res.status(400);
