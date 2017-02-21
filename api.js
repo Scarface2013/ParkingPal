@@ -23,8 +23,6 @@ var parser = require('body-parser');
 var spots = {};
 var lots = {};
 var img = new Image;
-var maskCanvas = new Canvas(480,320);
-var mask = maskCanvas.getContext('2d');
 var maskToSpot = {};
 var secretKey = "welcome";
 
@@ -76,13 +74,17 @@ setInterval(function(){
 setInterval(function(){
   Object.keys(spots).forEach(function(key){
     val = spots[key];
-    maskToSpot[("00000"+parseInt(key,16)).substring(-key.length)] = val.empty;
+    var hex = ("00000"+parseInt(key).toString(16)).substring(key.length-1,5+key.length);
+    maskToSpot[hex] = val.empty;
   });
   Object.keys(lots).forEach(function(lotId){
     var out = fs.createWriteStream(__dirname + '/lotmap/lot'+lotId+'.png');
     fs.readFile(__dirname + '/lotmask/lot'+lotId+'.png', function(err, lotImg){
       if (err) throw err;
+      
       img.src = lotImg;
+      var maskCanvas = new Canvas(img.width,img.height);
+      var mask = maskCanvas.getContext('2d');
       mask.drawImage(img, 0, 0);
       
       var maskImageData = mask.getImageData(0,0,maskCanvas.width,maskCanvas.height);
