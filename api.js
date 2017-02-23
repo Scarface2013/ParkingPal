@@ -161,6 +161,11 @@ app.get('/style.css',function(req,res){
   res.sendFile(__dirname+"/style.css");
 });
 
+app.get('/bg.jpg',function(req,res){
+  res.sendFile(__dirname+"/bg.jpg");
+});
+
+
 app.get('/lot', function(req,res){
   if(req.query.lot_id == undefined){
     res.status(400);
