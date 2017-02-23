@@ -80,7 +80,10 @@ setInterval(function(){
   Object.keys(lots).forEach(function(lotId){
     var out = fs.createWriteStream(__dirname + '/lotmap/lot'+lotId+'.png');
     fs.readFile(__dirname + '/lotmask/lot'+lotId+'.png', function(err, lotImg){
-      if (err) throw err;
+      if (err){
+        console.log("ERROR: " + error + " on lot" + lotId + ". Skipping.");
+        return;
+      }
       
       img.src = lotImg;
       var maskCanvas = new Canvas(img.width,img.height);
